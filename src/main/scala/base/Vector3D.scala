@@ -1,4 +1,4 @@
-package base
+package scala.base
 
 import scala.math.sqrt
 import scala.math.pow
@@ -46,3 +46,10 @@ final case class Vector3D(val x: Double, val y: Double, val z: Double) {
 type Point3D = Vector3D
 type Color = Vector3D
 
+object Point3D {
+    def apply(x: Double, y: Double, z: Double) = Vector3D(x, y, z)
+}
+
+object Color {
+    def apply(r: Double, g: Double, b: Double) = Vector3D(r, g, b)
+}
