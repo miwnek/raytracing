@@ -6,6 +6,7 @@ import scala.base.{Color, Point3D, Vector3D}
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import java.io.File
+import scala.collection.immutable.Vector3
 
 class Ray(val origin: Point3D, val direction: Vector3D)
 class LightSource(val position: Point3D, val intensity: Double)
@@ -156,7 +157,7 @@ object Main extends App {
   for (x <- 0 until width) {
     for (y <- 0 until height) {
 
-      val (r, g, b) = pixelColors(y)(x).unpack
+      val Color(r, g, b) = pixelColors(y)(x)
       var rgb: Int = (r * 255).toInt
       rgb = (rgb << 8) + (g * 255).toInt
       rgb = (rgb << 8) + (b * 255).toInt
