@@ -21,6 +21,9 @@ class RayActor extends Actor {
 class CameraActor(no_rays: Int, f: Point3D => Color, points: Array[Point3D])
     extends Actor {
 
+  val origin: Point3D = Vector3D(0, 0, 0)
+  
+
   var received: Int = 0
   var results: Array[Color] = Array.fill(no_rays)(Color(0, 0, 0))
   val rays =
@@ -49,7 +52,7 @@ class CameraActor(no_rays: Int, f: Point3D => Color, points: Array[Point3D])
 object Main extends App {
   val system = ActorSystem("Rays")
   val no_rays = 3
-  def f(points: Point3D): Color = { Color(0, 0, 0) }
+  def f(point: Point3D): Color = { Color(0, 0, 0) }
   val points: Array[Point3D] =
     Array(Vector3D(0, 0, 0), Vector3D(1, 1, 1), Vector3D(2, 2, 2))
 
