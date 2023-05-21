@@ -45,7 +45,7 @@ class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
 
     case Return(index, result) =>
       receivedRes += 1
-      
+
       val (x, y) = (index / width, index % width)
       val Color(r, g, b) = result / camera.samplesPerPixel
       var rgb: Int = (r * 255).toInt
@@ -66,6 +66,7 @@ class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
   }
 }
 
+// Minimal working example
 @main def main(): Unit = {
   val aspect_ratio: Double = Camera.aspectRatio
   val width: Int = 400
