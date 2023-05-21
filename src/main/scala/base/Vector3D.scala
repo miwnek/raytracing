@@ -36,12 +36,14 @@ final case class Vector3D(val x: Double, val y: Double, val z: Double) {
     def map(foo: Double => Double) = 
         Vector3D(foo(this.x), foo(this.y), foo(this.z))
 
-    val toStringRGB: String = {
-        val newX: Int = (255.999 * this.x.toDouble).toInt
-        val newY: Int = (255.999 * this.y.toDouble).toInt
-        val newZ: Int = (255.999 * this.z.toDouble).toInt
-        s"$newX $newY $newZ\n"
-    }
+    def colorToWrite(samplesPerPixel: Int): String =
+        val scale: Double = 1.0 / samplesPerPixel
+        val color: Color = (this * scale) map (clamp(_, 0.0, 0.999))
+        val (r, g, b) = (color.x, color.y, color.z)
+        s"${(256 * r).toInt} ${(256 * g).toInt} ${(256 * b).toInt}\n"
+    
+
+
 }
 
 type Point3D = Vector3D
