@@ -33,8 +33,7 @@ final case class Vector3D(val x: Double, val y: Double, val z: Double) {
 
   def x(other: Vector3D): Vector3D = this cross other
 
-  def map(foo: Double => Double) =
-    Vector3D(foo(this.x), foo(this.y), foo(this.z))
+  def map(foo: Double => Double) = Vector3D(foo(this.x), foo(this.y), foo(this.z))
 
     def colorToWrite(samplesPerPixel: Int): String =
       val scale: Double = 1.0 / samplesPerPixel
