@@ -17,6 +17,7 @@ import scala.objects._
 
   val camera = Camera(world, width)
 
+  // TODO: move progress bar here from Camera
   val colorsIterable = for {
     j <- (height - 1).until(-1, -1)
     i <- 0 until width

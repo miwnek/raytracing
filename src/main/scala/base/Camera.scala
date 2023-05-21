@@ -38,7 +38,7 @@ class Camera (
                 val u: Double = (i + randomFraction()) / (width - 1)
                 val v: Double = (j + randomFraction()) / (height - 1)
                 val ray: Ray = Camera.getRay(u, v)
-                recursiveColorSum(clr + ray.rayColor(world), iteration + 1)
+                recursiveColorSum(clr + ray.rayColor(world, Camera.maxDepth), iteration + 1)
         recursiveColorSum(Color(0, 0, 0), 0)
         
 
@@ -48,6 +48,7 @@ object Camera {
     val viewportHeight: Double = 2.0
     val viewportWidth: Double = aspectRatio * viewportHeight
     val focalLength: Double = 1.0
+    val maxDepth: Int = 50
 
     val origin: Point3D = Point3D(0, 0, 0)
     val horizontal: Vector3D = Vector3D(viewportWidth, 0, 0)

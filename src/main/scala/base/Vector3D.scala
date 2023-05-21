@@ -2,6 +2,7 @@ package scala.base
 
 import scala.math.sqrt
 import scala.math.pow
+import java.beans.VetoableChangeSupport
 
 final case class Vector3D(val x: Double, val y: Double, val z: Double) {
     lazy val sum: Double = this.x + this.y + this.z
@@ -38,12 +39,28 @@ final case class Vector3D(val x: Double, val y: Double, val z: Double) {
 
     def colorToWrite(samplesPerPixel: Int): String =
         val scale: Double = 1.0 / samplesPerPixel
-        val color: Color = (this * scale) map (clamp(_, 0.0, 0.999))
+        val color: Color = (this * scale)
+            .map(math.sqrt(_))
+            .map(clamp(_, 0.0, 0.999))
         val (r, g, b) = (color.x, color.y, color.z)
         s"${(256 * r).toInt} ${(256 * g).toInt} ${(256 * b).toInt}\n"
     
 
 
+}
+object Vector3D {
+    def random() = Vector3D(randomFraction(), randomFraction(), randomFraction())
+    def random(min: Double, max: Double) = Vector3D(
+        randomDouble(min, max),
+        randomDouble(min, max),
+        randomDouble(min, max)
+    )
+    def randomInUnitSphere(): Vector3D = 
+        @scala.annotation.tailrec
+        def helper(p: Vector3D): Vector3D =
+            if p.length_squared < 1 then p
+            else helper(Vector3D.random(-1, 1))
+        helper(Vector3D.random(-1, 1))
 }
 
 type Point3D = Vector3D
