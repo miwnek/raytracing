@@ -14,6 +14,7 @@ final case class Vector3D(val x: Double, val y: Double, val z: Double) {
     def *(scalar: Double): Vector3D = this map (_ * scalar)
     def /(scalar: Double): Vector3D = this map (_ / scalar)
     def **(scalar: Double): Vector3D = this map (pow(_, scalar))
+    def unary_- : Vector3D = Vector3D(- this.x, - this.y, - this.z)
 
     // dot product
     def dot(other: Vector3D): Double = 

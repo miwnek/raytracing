@@ -1,5 +1,6 @@
 package scala.base
 
+import scala.objects._
 import java.io.FileWriter
 import java.io.File
 
@@ -8,6 +9,7 @@ type Filepath = String
 class Renderer (
     private val filepath: Filepath, 
     private val rays: List[Ray],
+    private val world: HittableList,
     private val width: Int,
     private val height: Int
 ) {
@@ -23,7 +25,7 @@ class Renderer (
                 val left: Int = ((width * height) - idx) / width
                 System.err.println(f"\rScanlines remaining: $left ")
                 System.err.flush()
-            file.write(ray.rayColorString()) 
+            file.write(ray.rayColorString(world)) 
         }
         System.err.println("\nDone.\n")
         file.close()
@@ -42,10 +44,10 @@ object Renderer {
 
     private val rand = scala.util.Random
 
-    def apply(rays: List[Ray], width: Int, height: Int): Renderer = 
+    def apply(rays: List[Ray], world: HittableList, width: Int, height: Int): Renderer = 
         val id: Int = math.abs(rand.nextInt()) % 1000
-        new Renderer(s"tmp_$id.ppm", rays, width, height)
+        new Renderer(s"tmp_$id.ppm", rays, world, width, height)
 
-    def apply(filepath: Filepath, rays: List[Ray], width: Int, height: Int): Renderer =
-        new Renderer(filepath, rays, width, height)
+    def apply(filepath: Filepath, rays: List[Ray], world: HittableList, width: Int, height: Int): Renderer =
+        new Renderer(filepath, rays, world, width, height)
 }

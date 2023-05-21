@@ -1,6 +1,11 @@
 package scala.base
 
 // import akka.actor._
+import scala.objects._
+
+val infinity: Double = Double.MaxValue
+val pi: Double = math.Pi
+val degreesToRadians: Double => Double = deg => deg  * pi / 180.0
 
 @main def run(args: String*): Unit = {
 
@@ -10,8 +15,10 @@ package scala.base
   val width: Int = 400
   val height: Int = (width.toDouble / aspect_ratio).toInt
 
+  val world: HittableList = HittableList()
+    .add(Sphere( Point3D(0, 0, -1), 0.5 ))
+    .add(Sphere( Point3D(0, -100.5, -1), 100 ))
 
-  
   val raysIterable = for {
     j <- (height - 1).until(-1, -1)
     i <- 0 until width
@@ -23,7 +30,7 @@ package scala.base
 
   val rays: List[Ray] = raysIterable.toList
 
-  val renderer = Renderer(rays, width, height)
+  val renderer = Renderer(rays, world, width, height)
 
   renderer.writeScene()
 }
