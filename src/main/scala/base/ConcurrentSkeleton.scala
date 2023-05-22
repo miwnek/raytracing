@@ -1,6 +1,6 @@
-package base
+package scala.base
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{Actor, ActorSystem, Props}
 
 import scala.objects.HittableList
 import java.awt.image.BufferedImage
@@ -8,6 +8,9 @@ import javax.imageio.ImageIO
 import java.io.File
 import scala.objects.Sphere
 import scala.base.{Camera, Color, Point3D}
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+import java.util.concurrent.TimeUnit
 
 case class ExecAll()
 case class ExecFoo(f: (Int, Int) => Color, x: Int, y: Int)
@@ -24,7 +27,7 @@ class RayActor extends Actor {
 class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
 
   val camera: Camera = Camera(world, width)
-  val rayActors: Seq[ActorRef] = (0 until width * height)
+  val rayActors = (0 until width * height)
     .map(index => context.actorOf(Props(RayActor()), index.toString))
 
   var pixelColors: Array[Array[Color]] = Array.ofDim(height, width)
@@ -78,4 +81,6 @@ class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
   val system = ActorSystem("Rays")
   val camera = system.actorOf(Props(CameraActor(world, width, height)))
   camera ! ExecAll
+
+  Await.ready(system.whenTerminated, Duration(10, TimeUnit.MINUTES))
 }
