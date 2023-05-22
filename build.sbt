@@ -1,4 +1,3 @@
-
 // The simplest possible sbt build file is just one line:
 
 scalaVersion := "3.2.2"
@@ -21,14 +20,14 @@ version := "1.0"
 // mostly only necessary if you intend to publish your library's binaries on a
 // place like Sonatype.
 
-
 // Want to use a published library in your project?
 // You can define other libraries as dependencies in your build like this:
 val AkkaVersion = "2.8.2"
 libraryDependencies ++= Seq(
-    "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
-    "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
-    "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion % Test
+  "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
+  "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
+  "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion % Test,
+  "ch.qos.logback" % "logback-classic" % "1.4.1"
 )
 
 // Here, `libraryDependencies` is a set of dependencies, and by using `+=`,

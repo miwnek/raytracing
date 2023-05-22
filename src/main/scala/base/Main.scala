@@ -12,8 +12,8 @@ import scala.objects._
   val height: Int = (width.toDouble / aspect_ratio).toInt
 
   val world: HittableList = HittableList()
-    .add(Sphere( Point3D(0, 0, -1), 0.5 ))
-    .add(Sphere( Point3D(0, -100.5, -1), 100 ))
+    .add(Sphere(Point3D(0, 0, -1), 0.5))
+    .add(Sphere(Point3D(0, -100.5, -1), 100))
 
   val camera = Camera(world, width)
 
@@ -27,4 +27,3 @@ import scala.objects._
 
   camera.writeScene(colors)
 }
-
