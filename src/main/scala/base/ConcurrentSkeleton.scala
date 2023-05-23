@@ -50,10 +50,14 @@ class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
       receivedRes += 1
 
       val (x, y) = (index / width, index % width)
-      val Color(r, g, b) = result / camera.samplesPerPixel
-      var rgb: Int = (r * 255).toInt
-      rgb = (rgb << 8) + (g * 255).toInt
-      rgb = (rgb << 8) + (b * 255).toInt
+      val Color(r, g, b) = 
+        (result / camera.samplesPerPixel)
+        .map(math.sqrt(_))
+        .map(clamp(_, 0.0, 0.999))
+      val rgb: Int = 
+        ((((r * 255).toInt
+        << 8) + (g * 255).toInt)
+        << 8) + (b * 255).toInt
       image.setRGB(y, height - 1 - x, rgb)
 
       pixelColors(index / width)(index % width) = result
@@ -67,20 +71,4 @@ class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
         context.system.terminate()
       }
   }
-}
-
-// Minimal working example
-@main def main(): Unit = {
-  val aspect_ratio: Double = Camera.aspectRatio
-  val width: Int = 400
-  val height: Int = (width.toDouble / aspect_ratio).toInt
-  val world: HittableList = HittableList()
-    .add(Sphere(Point3D(0, 0, -1), 0.5))
-    .add(Sphere(Point3D(0, -100.5, -1), 100))
-
-  val system = ActorSystem("Rays")
-  val camera = system.actorOf(Props(CameraActor(world, width, height)))
-  camera ! ExecAll
-
-  Await.ready(system.whenTerminated, Duration(10, TimeUnit.MINUTES))
 }

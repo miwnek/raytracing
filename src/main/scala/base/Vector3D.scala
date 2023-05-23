@@ -57,6 +57,14 @@ object Vector3D {
       if p.length_squared < 1 then p
       else helper(Vector3D.random(-1, 1))
     helper(Vector3D.random(-1, 1))
+
+  def randomUnitVector(): Vector3D = 
+    randomInUnitSphere().unitVector
+
+  def randomInHemisphere(normal: Vector3D): Vector3D = 
+    val inUnitSphere: Vector3D = Vector3D.randomInUnitSphere()
+    if (inUnitSphere o normal) > 0.0 then inUnitSphere
+    else - inUnitSphere
 }
 
 type Point3D = Vector3D

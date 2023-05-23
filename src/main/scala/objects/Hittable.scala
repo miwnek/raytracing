@@ -5,7 +5,11 @@ import scala.base.Point3D
 import scala.base.Ray
 
 trait HitResult
-case class HitRecord(point: Point3D, frontFace: Boolean, normal: Vector3D, t: Double) extends HitResult
+case class HitRecord(point: Point3D, 
+                    frontFace: Boolean, 
+                    normal: Vector3D, 
+                    t: Double, 
+                    material: Material) extends HitResult
 case object Missed extends HitResult
 
 trait Hittable {
@@ -39,7 +43,7 @@ object HittableList {
     def apply(args: Hittable*) = new HittableList(args.toList)
 }
 
-case class Sphere(val center: Point3D, val radius: Double) extends Hittable {
+case class Sphere(val center: Point3D, val radius: Double, val material: Material) extends Hittable {
     override def hitBy(ray: Ray, tMin: Double, tMax: Double): HitResult = 
         val oc: Vector3D = ray.origin - this.center
         val a: Double = ray.direction.length_squared
@@ -64,7 +68,7 @@ case class Sphere(val center: Point3D, val radius: Double) extends Hittable {
                 val outwardNormal: Vector3D = (point - this.center) / this.radius
                 val frontFace: Boolean = (ray.direction dot outwardNormal) < 0
                 val normal: Vector3D = if frontFace then outwardNormal else - outwardNormal 
-                HitRecord(point, frontFace, normal, root)
+                HitRecord(point, frontFace, normal, root, this.material)
 
     
 }

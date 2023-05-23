@@ -18,10 +18,10 @@ class Ray (
                     val t: Double = 0.5 * (unitDirection.y + 1.0)
                     val clr = Color(1.0, 1.0, 1.0) * (1.0 - t) + Color(0.5, 0.7, 1.0) * t
                     clr
-                case HitRecord(point, frontFace, normal, t) => 
-                    val target: Point3D = point + normal + Vector3D.randomInUnitSphere()
+                case HitRecord(point, _, normal, t, _) => 
+                    val target: Point3D = point + Vector3D.randomInHemisphere(normal)
                     val (clr: Color, pwr: Int) = Ray(point, target - point).rayColorTail(world, depth - 1, 1)
-                    clr * (math.pow(0.5, pwr))
+                    clr * (math.pow(0.5, pwr)) // * 0.5 for each recursive call where the ray hits something, this one included
 
     @scala.annotation.tailrec
     private final def rayColorTail(world: HittableList, depth: Int, power: Int): (Color, Int) = 
@@ -33,8 +33,8 @@ class Ray (
                     val t: Double = 0.5 * (unitDirection.y + 1.0)
                     val clr = Color(1.0, 1.0, 1.0) * (1.0 - t) + Color(0.5, 0.7, 1.0) * t
                     (clr, power)
-                case HitRecord(point, frontFace, normal, t) => 
-                    val target: Point3D = point + normal + Vector3D.randomInUnitSphere()
+                case HitRecord(point, _, normal, t, _) => 
+                    val target: Point3D = point + Vector3D.randomInHemisphere(normal)
                     Ray(point, target - point).rayColorTail(world, depth - 1, power + 1)
 
 }
