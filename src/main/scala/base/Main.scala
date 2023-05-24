@@ -13,8 +13,8 @@ private val height: Int = (width.toDouble / aspectRatio).toInt
 
 private val materialGround: Material = Lambertian(Color(0.8, 0.8, 0.0))
 private val materialCenter: Material = Lambertian(Color(0.7, 0.3, 0.3))
-private val materialLeft  : Material = Metal(Color(0.8, 0.8, 0.8))
-private val materialRight : Material = Metal(Color(0.8, 0.6, 0.2))
+private val materialLeft  : Material = Metal(Color(0.8, 0.8, 0.8), 0.3)
+private val materialRight : Material = Metal(Color(0.8, 0.6, 0.2), 1.0)
 
 
 private val world: HittableList = HittableList()

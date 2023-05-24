@@ -46,5 +46,4 @@ class Ray (
                             scattered.rayColorTail(world, depth - 1, acc * attenuation)
                         case None => 
                             (Color(0, 0, 0), acc)
-
 }

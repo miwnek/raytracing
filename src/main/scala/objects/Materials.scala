@@ -3,6 +3,7 @@ package scala.objects
 import scala.base.Color
 import scala.base.Ray
 import scala.base.Vector3D
+import scala.base.Vector3D.randomInUnitSphere
 
 case class ScatterRecord(attenuation: Color, scattered: Ray)
 
@@ -20,10 +21,11 @@ class Lambertian(val albedo: Color) extends Material {
         )
 }
 
-class Metal(val albedo: Color) extends Material {
+class Metal(val albedo: Color, fuzziness: Double) extends Material {
+    val fuzz: Double = if fuzziness < 1 then fuzziness else 1 
     override def scatter(rayIn: Ray, record: HitRecord): Option[ScatterRecord] =
         val reflected: Vector3D = (rayIn.direction.unitVector) reflect (record.normal)
-        val scattered: Ray = Ray(record.point, reflected)
+        val scattered: Ray = Ray(record.point, reflected + randomInUnitSphere() * fuzz)
         if (scattered.direction dot record.normal) > 0 then
             Some( ScatterRecord( albedo, scattered))
         else
