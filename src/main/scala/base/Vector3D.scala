@@ -1,7 +1,6 @@
 package scala.base
 
-import scala.math.sqrt
-import scala.math.pow
+import scala.math.{sqrt, pow, min, max, abs}
 import java.beans.VetoableChangeSupport
 
 final case class Vector3D(val x: Double, val y: Double, val z: Double) {
@@ -9,15 +8,17 @@ final case class Vector3D(val x: Double, val y: Double, val z: Double) {
   lazy val length_squared: Double = (this ** 2).sum
   lazy val length: Double = sqrt(length_squared)
   lazy val unitVector: Vector3D = this / this.length
-  lazy val nearZero: Boolean = (math.abs(x) < Vector3D.epsilon) 
-    && (math.abs(x) < Vector3D.epsilon) 
+  lazy val nearZero: Boolean = (math.abs(x) < Vector3D.epsilon)
+    && (math.abs(x) < Vector3D.epsilon)
     && (math.abs(x) < Vector3D.epsilon)
 
-
-  def +(other: Vector3D): Vector3D = Vector3D(this.x + other.x, this.y + other.y, this.z + other.z)
-  def -(other: Vector3D): Vector3D = Vector3D(this.x - other.x, this.y - other.y, this.z - other.z)
+  def +(other: Vector3D): Vector3D =
+    Vector3D(this.x + other.x, this.y + other.y, this.z + other.z)
+  def -(other: Vector3D): Vector3D =
+    Vector3D(this.x - other.x, this.y - other.y, this.z - other.z)
   def *(scalar: Double): Vector3D = this map (_ * scalar)
-  def *(other: Vector3D): Vector3D = Vector3D(this.x * other.x, this.y * other.y, this.z * other.z)
+  def *(other: Vector3D): Vector3D =
+    Vector3D(this.x * other.x, this.y * other.y, this.z * other.z)
   def /(scalar: Double): Vector3D = this map (_ / scalar)
   def **(scalar: Double): Vector3D = this map (pow(_, scalar))
   def unary_- : Vector3D = Vector3D(-this.x, -this.y, -this.z)
@@ -38,9 +39,19 @@ final case class Vector3D(val x: Double, val y: Double, val z: Double) {
 
   def x(other: Vector3D): Vector3D = this cross other
 
-  def reflect(other: Vector3D): Vector3D = this - ((other * (this dot other)) * 2)
+  def reflect(other: Vector3D): Vector3D =
+    this - ((other * (this dot other)) * 2)
 
-  def map(foo: Double => Double) = Vector3D(foo(this.x), foo(this.y), foo(this.z))
+  def refract(other: Vector3D, refractionRatio: Double): Vector3D = {
+    val cosTheta = min(-this o other, 1.0)
+    val rayOutPerp = (this + other * cosTheta) * refractionRatio
+    val rayOutParl = other * (-sqrt(abs(1.0 - rayOutPerp.length_squared)))
+
+    return rayOutParl + rayOutPerp
+  }
+
+  def map(foo: Double => Double) =
+    Vector3D(foo(this.x), foo(this.y), foo(this.z))
 
   def colorToWrite(samplesPerPixel: Int): String =
     val scale: Double = 1.0 / samplesPerPixel
@@ -65,13 +76,13 @@ object Vector3D {
       else helper(Vector3D.random(-1, 1))
     helper(Vector3D.random(-1, 1))
 
-  def randomUnitVector(): Vector3D = 
+  def randomUnitVector(): Vector3D =
     randomInUnitSphere().unitVector
 
-  def randomInHemisphere(normal: Vector3D): Vector3D = 
+  def randomInHemisphere(normal: Vector3D): Vector3D =
     val inUnitSphere: Vector3D = Vector3D.randomInUnitSphere()
     if (inUnitSphere o normal) > 0.0 then inUnitSphere
-    else - inUnitSphere
+    else -inUnitSphere
 }
 
 type Point3D = Vector3D
