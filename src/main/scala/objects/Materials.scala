@@ -4,6 +4,10 @@ import scala.base.{Color, Ray, Vector3D}
 import scala.math.{abs, sqrt, min, max, pow}
 import scala.compiletime.ops.double
 import scala.base.randomDouble
+import scala.base.Color
+import scala.base.Ray
+import scala.base.Vector3D
+import scala.base.Vector3D.randomInUnitSphere
 
 case class ScatterRecord(attenuation: Color, scattered: Ray)
 
@@ -17,17 +21,6 @@ class Lambertian(val albedo: Color) extends Material {
     val newSD: Vector3D =
       if scatterDirection.nearZero then record.normal else scatterDirection
     return Some(ScatterRecord(albedo, Ray(record.point, scatterDirection)))
-}
-
-class Metal(val albedo: Color) extends Material {
-  override def scatter(rayIn: Ray, record: HitRecord): Option[ScatterRecord] =
-    val reflected: Vector3D =
-      (rayIn.direction.unitVector) reflect (record.normal)
-    val scattered: Ray = Ray(record.point, reflected)
-    if (scattered.direction dot record.normal) > 0 then
-      Some(ScatterRecord(albedo, scattered))
-    else None
-
 }
 
 class Dielectric(val indexOfRefraction: Double) extends Material {
@@ -59,4 +52,13 @@ class Dielectric(val indexOfRefraction: Double) extends Material {
     val r0 = pow((1 - refIdx) / (1 + refIdx), 2)
     r0 + (1 - r0) * pow(1 - cos, 5)
   }
+}
+class Metal(val albedo: Color, fuzziness: Double) extends Material {
+  val fuzz: Double = if fuzziness < 1 then fuzziness else 1
+  override def scatter(rayIn: Ray, record: HitRecord): Option[ScatterRecord] =
+    val reflected: Vector3D = (rayIn.direction.unitVector) reflect (record.normal)
+    val scattered: Ray = Ray(record.point, reflected + randomInUnitSphere() * fuzz)
+    if (scattered.direction dot record.normal) > 0 then Some(ScatterRecord(albedo, scattered))
+    else None
+
 }

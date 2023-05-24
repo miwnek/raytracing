@@ -14,8 +14,7 @@ private val height: Int = (width.toDouble / aspectRatio).toInt
 private val materialGround: Material = Lambertian(Color(0.8, 0.8, 0.0))
 private val materialCenter: Material = Lambertian(Color(0.7, 0.3, 0.3))
 private val materialLeft: Material = Metal(Color(0.8, 0.8, 0.8))
-//private val materialRight: Material = Metal(Color(0.8, 0.6, 0.2))
-private val materialRight: Material = Dielectric(1.5)
+private val materialRight: Material = Metal(Color(0.8, 0.6, 0.2))
 
 private val world: HittableList = HittableList()
   .add(Sphere(Point3D(0.0, -100.5, -1.0), 100.0, materialGround))
