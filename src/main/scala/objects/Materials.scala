@@ -53,6 +53,7 @@ class Dielectric(val indexOfRefraction: Double) extends Material {
     r0 + (1 - r0) * pow(1 - cos, 5)
   }
 }
+
 class Metal(val albedo: Color, fuzziness: Double) extends Material {
   val fuzz: Double = if fuzziness < 1 then fuzziness else 1
   override def scatter(rayIn: Ray, record: HitRecord): Option[ScatterRecord] =

@@ -14,15 +14,14 @@ import java.util.concurrent.TimeUnit
 
 case object TakePhoto
 case class ExecFoo(f: (Int, Int) => Color, x: Int, y: Int)
-case class Return(index: Int, result: Color, time: Long)
+case class Return(index: Int, result: Color)
 
 class RayActor extends Actor {
+  var result: Color = Color(0, 0, 0)
+  val index: Int = self.path.name.toInt
   override def receive: Actor.Receive = { case ExecFoo(f, x, y) =>
-    val timeS = System.nanoTime()
-    val result = f(x, y)
-    val index = self.path.name.toInt
-    val timeE = System.nanoTime()
-    sender() ! Return(index, result, timeE - timeS)
+    result = f(x, y)
+    sender() ! Return(index, result)
   }
 }
 
@@ -40,15 +39,11 @@ class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
 
   override def receive: Actor.Receive = {
     case TakePhoto =>
-      println("Camera active. Sending rays...")
-
       for (x <- 0 until width; y <- 0 until height)
         rayActors(y * width + x) ! ExecFoo(camera.getSampledColor, x, y)
 
-    case Return(index, result, time) =>
+    case Return(index, result) =>
       receivedRes += 1
-      totalTime += time
-
       val (x, y) = (index / width, index % width)
       pixelColors(x)(y) = result
 
@@ -66,8 +61,6 @@ class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
 
       if (receivedRes == width * height) {
         // ImageIO.write(image, "jpg", new File("./", "test.jpg"))
-        println("Time[s]: " + totalTime / 1.0e9)
-
         context.system.terminate()
       }
   }

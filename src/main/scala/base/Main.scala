@@ -24,7 +24,6 @@ private val world: HittableList = HittableList()
 
 @main def runNormal(): Unit = {
   val timeS = System.nanoTime()
-
   val camera = Camera(world, width)
 
   // TODO: move progress bar here from Camera
@@ -42,9 +41,12 @@ private val world: HittableList = HittableList()
 }
 
 @main def runConcurrent() = {
+  val timeS = System.nanoTime()
   val actorSystem: ActorSystem = ActorSystem("Rays")
   val cameraMan = actorSystem.actorOf(Props(CameraActor(world, width, height)))
   cameraMan ! TakePhoto
 
   Await.ready(actorSystem.whenTerminated, Duration(10, TimeUnit.MINUTES))
+  val timeE = System.nanoTime()
+  println("Time [s]: " + (timeE - timeS) / 1.0e9)
 }
