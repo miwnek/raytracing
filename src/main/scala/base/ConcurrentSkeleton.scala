@@ -45,22 +45,16 @@ class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
     case Return(index, result) =>
       receivedRes += 1
       val (x, y) = (index / width, index % width)
-      pixelColors(x)(y) = result
-
-      /*
-      val Color(r, g, b) =
-        (result / camera.samplesPerPixel)
-          .map(math.sqrt(_))
-          .map(clamp(_, 0.0, 0.999))
-      val rgb: Int =
-        ((((r * 255).toInt
-          << 8) + (g * 255).toInt)
-          << 8) + (b * 255).toInt
-      image.setRGB(y, height - 1 - x, rgb)
-       */
+      pixelColors(x)(y) = result / camera.samplesPerPixel
 
       if (receivedRes == width * height) {
-        // ImageIO.write(image, "jpg", new File("./", "test.jpg"))
+        for (x <- 0 until width; y <- 0 until height) {
+          val Color(r, g, b) = pixelColors(y)(x)
+          val rgb: Int = ((((r * 255).toInt << 8) + (g * 255).toInt) << 8) + (b * 255).toInt
+          image.setRGB(x, height - 1 - y, rgb)
+        }
+
+        ImageIO.write(image, "jpg", new File("./", "test.jpg"))
         context.system.terminate()
       }
   }
