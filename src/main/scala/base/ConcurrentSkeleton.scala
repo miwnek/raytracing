@@ -30,7 +30,7 @@ class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
   val rayActors = (0 until width * height)
     .map(index => context.actorOf(Props(RayActor()), index.toString))
 
-  var pixelColors: Array[Array[Color]] = Array.ofDim(height, width)
+  val pixelColors: Array[Array[Color]] = Array.ofDim(height, width)
   var receivedRes: Int = 0
   val image: BufferedImage = BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
 

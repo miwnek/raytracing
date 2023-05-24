@@ -2,6 +2,8 @@ package scala.base
 
 // import akka.actor._
 import scala.objects._
+import scala.objects.HitRecord
+import scala.objects.ScatterRecord
 
 class Ray (
     val origin: Point3D,
@@ -12,29 +14,37 @@ class Ray (
     def rayColor(world: HittableList, depth: Int): Color = 
         if depth <= 0 then Color(0, 0, 0)
         else
-            world hitBy(this, 0.001, infinity) match
+            val result: HitResult = world hitBy(this, 0.001, infinity) 
+            result match
                 case Missed => 
                     val unitDirection: Vector3D = this.direction.unitVector
                     val t: Double = 0.5 * (unitDirection.y + 1.0)
                     val clr = Color(1.0, 1.0, 1.0) * (1.0 - t) + Color(0.5, 0.7, 1.0) * t
                     clr
-                case HitRecord(point, _, normal, t, _) => 
-                    val target: Point3D = point + Vector3D.randomInHemisphere(normal)
-                    val (clr: Color, pwr: Int) = Ray(point, target - point).rayColorTail(world, depth - 1, 1)
-                    clr * (math.pow(0.5, pwr)) // * 0.5 for each recursive call where the ray hits something, this one included
+                case HitRecord(point, frontFace, normal, t, material) => 
+                    material.scatter(this, result.asInstanceOf[HitRecord]) match
+                        case Some(ScatterRecord(attenuation, scattered)) =>
+                            val (clr, att): (Color, Color) = scattered.rayColorTail(world, depth - 1, attenuation)
+                            clr * att
+                        case None =>
+                            Color(0, 0, 0)
 
     @scala.annotation.tailrec
-    private final def rayColorTail(world: HittableList, depth: Int, power: Int): (Color, Int) = 
-        if depth <= 0 then (Color(0, 0, 0), power)
+    private final def rayColorTail(world: HittableList, depth: Int, acc: Color): (Color, Color) = 
+        if depth <= 0 then (Color(0, 0, 0), acc)
         else
-            world hitBy(this, 0.001, infinity) match
+            val result: HitResult = world hitBy(this, 0.001, infinity) 
+            result match
                 case Missed => 
                     val unitDirection: Vector3D = this.direction.unitVector
                     val t: Double = 0.5 * (unitDirection.y + 1.0)
                     val clr = Color(1.0, 1.0, 1.0) * (1.0 - t) + Color(0.5, 0.7, 1.0) * t
-                    (clr, power)
-                case HitRecord(point, _, normal, t, _) => 
-                    val target: Point3D = point + Vector3D.randomInHemisphere(normal)
-                    Ray(point, target - point).rayColorTail(world, depth - 1, power + 1)
+                    (clr, acc)
+                case HitRecord(point, _, normal, t, material) => 
+                    material.scatter(this, result.asInstanceOf[HitRecord]) match
+                        case Some(ScatterRecord(attenuation, scattered)) =>
+                            scattered.rayColorTail(world, depth - 1, acc * attenuation)
+                        case None => 
+                            (Color(0, 0, 0), acc)
 
 }

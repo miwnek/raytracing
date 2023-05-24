@@ -9,10 +9,15 @@ final case class Vector3D(val x: Double, val y: Double, val z: Double) {
   lazy val length_squared: Double = (this ** 2).sum
   lazy val length: Double = sqrt(length_squared)
   lazy val unitVector: Vector3D = this / this.length
+  lazy val nearZero: Boolean = (math.abs(x) < Vector3D.epsilon) 
+    && (math.abs(x) < Vector3D.epsilon) 
+    && (math.abs(x) < Vector3D.epsilon)
+
 
   def +(other: Vector3D): Vector3D = Vector3D(this.x + other.x, this.y + other.y, this.z + other.z)
   def -(other: Vector3D): Vector3D = Vector3D(this.x - other.x, this.y - other.y, this.z - other.z)
   def *(scalar: Double): Vector3D = this map (_ * scalar)
+  def *(other: Vector3D): Vector3D = Vector3D(this.x * other.x, this.y * other.y, this.z * other.z)
   def /(scalar: Double): Vector3D = this map (_ / scalar)
   def **(scalar: Double): Vector3D = this map (pow(_, scalar))
   def unary_- : Vector3D = Vector3D(-this.x, -this.y, -this.z)
@@ -33,18 +38,20 @@ final case class Vector3D(val x: Double, val y: Double, val z: Double) {
 
   def x(other: Vector3D): Vector3D = this cross other
 
+  def reflect(other: Vector3D): Vector3D = this - ((other * (this dot other)) * 2)
+
   def map(foo: Double => Double) = Vector3D(foo(this.x), foo(this.y), foo(this.z))
 
-    def colorToWrite(samplesPerPixel: Int): String =
-      val scale: Double = 1.0 / samplesPerPixel
-      val color: Color = (this * scale)
-        .map(math.sqrt(_))
-        .map(clamp(_, 0.0, 0.999))
-      val (r, g, b) = (color.x, color.y, color.z)
-      s"${(256 * r).toInt} ${(256 * g).toInt} ${(256 * b).toInt}\n"
-
+  def colorToWrite(samplesPerPixel: Int): String =
+    val scale: Double = 1.0 / samplesPerPixel
+    val color: Color = (this * scale)
+      .map(math.sqrt(_))
+      .map(clamp(_, 0.0, 0.999))
+    val (r, g, b) = (color.x, color.y, color.z)
+    s"${(256 * r).toInt} ${(256 * g).toInt} ${(256 * b).toInt}\n"
 }
 object Vector3D {
+  private val epsilon: Double = 1e-8
   def random() = Vector3D(randomFraction(), randomFraction(), randomFraction())
   def random(min: Double, max: Double) = Vector3D(
     randomDouble(min, max),
