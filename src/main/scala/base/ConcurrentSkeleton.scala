@@ -25,9 +25,10 @@ class RayActor extends Actor {
   }
 }
 
-class CameraActor(world: HittableList, width: Int, height: Int) extends Actor {
+class CameraActor(world: HittableList, width: Int, height: Int, 
+                  vfov: Double, lookFrom: Point3D, lookAt: Point3D, vup: Vector3D, aperture: Double, focusDist: Double) extends Actor {
 
-  val camera: Camera = Camera(world, width)
+  val camera: Camera = Camera(world, width, vfov, lookFrom, lookAt, vup, aperture, focusDist)
   val rayActors = (0 until width * height)
     .map(index => context.actorOf(Props(RayActor()), index.toString))
 

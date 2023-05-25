@@ -48,7 +48,7 @@ case class Sphere(val center: Point3D, val radius: Double, val material: Materia
         val oc: Vector3D = ray.origin - this.center
         val a: Double = ray.direction.length_squared
         val halfB: Double = oc dot ray.direction
-        val c = oc.length_squared - radius * radius
+        val c: Double = oc.length_squared - radius * radius
         val delta = halfB*halfB - a*c
 
         if delta < 0 then 

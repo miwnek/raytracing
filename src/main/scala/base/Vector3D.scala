@@ -83,6 +83,13 @@ object Vector3D {
     val inUnitSphere: Vector3D = Vector3D.randomInUnitSphere()
     if (inUnitSphere o normal) > 0.0 then inUnitSphere
     else -inUnitSphere
+
+  def randomInUnitDisk(): Vector3D = 
+    @scala.annotation.tailrec
+    def helper(p: Vector3D): Vector3D =
+      if p.length_squared < 1 then p
+      else helper(Vector3D(randomDouble(-1, 1), randomDouble(-1, 1), 0))
+    helper(Vector3D(randomDouble(-1, 1), randomDouble(-1, 1), 0))
 }
 
 type Point3D = Vector3D

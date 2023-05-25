@@ -9,7 +9,7 @@ class Ray (
     val origin: Point3D,
     val direction: Vector3D
 ) {
-    def at(time: Double): Vector3D = origin + direction * time
+    def at(time: Double): Vector3D = origin + (direction * time)
 
     def rayColor(world: HittableList, depth: Int): Color = 
         if depth <= 0 then Color(0, 0, 0)
