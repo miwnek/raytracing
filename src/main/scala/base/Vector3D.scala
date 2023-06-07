@@ -53,13 +53,13 @@ final case class Vector3D(val x: Double, val y: Double, val z: Double) {
   def map(foo: Double => Double) =
     Vector3D(foo(this.x), foo(this.y), foo(this.z))
 
-  def colorToWrite(samplesPerPixel: Int): String =
+  def color256(samplesPerPixel: Int): (Int, Int, Int) =
     val scale: Double = 1.0 / samplesPerPixel
     val color: Color = (this * scale)
       .map(math.sqrt(_))
       .map(clamp(_, 0.0, 0.999))
     val (r, g, b) = (color.x, color.y, color.z)
-    s"${(256 * r).toInt} ${(256 * g).toInt} ${(256 * b).toInt}\n"
+    ((256 * r).toInt, (256 * g).toInt, (256 * b).toInt)
 }
 object Vector3D {
   private val epsilon: Double = 1e-8

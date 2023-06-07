@@ -25,7 +25,7 @@ class RayActor extends Actor {
   }
 }
 
-class CameraActor(world: HittableList, width: Int, height: Int, 
+class CameraActor(world: HittableList, width: Int,
                   vfov: Double, lookFrom: Point3D, lookAt: Point3D, vup: Vector3D, aperture: Double, focusDist: Double) extends Actor {
 
   val camera: Camera = Camera(world, width, vfov, lookFrom, lookAt, vup, aperture, focusDist)
@@ -46,12 +46,14 @@ class CameraActor(world: HittableList, width: Int, height: Int,
     case Return(index, result) =>
       receivedRes += 1
       val (x, y) = (index / width, index % width)
-      pixelColors(x)(y) = result / camera.samplesPerPixel
+      pixelColors(x)(y) = (result / Camera.samplesPerPixel)
+                .map(math.sqrt(_))
+                .map(clamp(_, 0.0, 0.999))
 
       if (receivedRes == width * height) {
         for (x <- 0 until width; y <- 0 until height) {
           val Color(r, g, b) = pixelColors(y)(x)
-          val rgb: Int = ((((r * 255).toInt << 8) + (g * 255).toInt) << 8) + (b * 255).toInt
+          val rgb: Int = ((((r * 256).toInt << 8) + (g * 256).toInt) << 8) + (b * 256).toInt
           image.setRGB(x, height - 1 - y, rgb)
         }
 
