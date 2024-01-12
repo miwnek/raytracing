@@ -14,6 +14,8 @@ This will prompt you to pick  one of two main classes: <em>[1] runConcurrent</em
 
  > Note: by default the image takes a few minutes to render.<br>Depending on the machine you might want to change the **width** value in <em>src/main/scala/base/Main.scala</em>.
 
+ You can also check out the benchmarks between the two version in the **report** folder.
+
 ## Example
 ![alt text](https://github.com/miwnek/raytracing/blob/master/sample.jpg?raw=true)
 
