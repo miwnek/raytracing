@@ -16,3 +16,7 @@ This will prompt you to pick  one of two main classes: <em>[1] runConcurrent</em
 
 ## Example
 ![alt text](https://github.com/miwnek/raytracing/blob/master/sample.jpg?raw=true)
+
+## Authors
+ - Mikołaj Wnęk - [miwnek](https://github.com/miwnek)
+ - Bartosz Hanc - [barhanc](https://github.com/barhanc)
