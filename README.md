@@ -22,3 +22,6 @@ This will prompt you to pick  one of two main classes: <em>[1] runConcurrent</em
 ## Authors
  - Mikołaj Wnęk - [miwnek](https://github.com/miwnek)
  - Bartosz Hanc - [barhanc](https://github.com/barhanc)
+
+ ## Credits
+  - [_Ray Tracing in One Weekend_](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
