@@ -1,4 +1,5 @@
 # Ray tracing
+A simple ray tracing renderer, written in Scala, made to experiment with the actor system.
 
 ## Usage
 
@@ -8,7 +9,7 @@ cd raytracing
 sbt run
 ```
 This will prompt you to pick  one of two main classes: <em>[1] runConcurrent</em> or <em>[2] runSequential</em>.<br>
- > <em>runConcurrent</em> runs a version of the program utilizing **Akka Actors** for concurrent ray computations. <br><em>runSequantial</em> runs a seqantial version. 
+ > <em>runConcurrent</em> runs a version of the program utilizing **Akka Actors** for concurrent ray computations. <br><em>runSequential</em> runs a sequential version. 
 
  Entering 1 or 2 will cause the corresponding program to run and generate a <em>jpg</em> image when it's done.
 
